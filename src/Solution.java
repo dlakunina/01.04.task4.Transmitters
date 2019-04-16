@@ -1,21 +1,44 @@
-import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.regex.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Solution {
 
+    private static final Scanner scanner = new Scanner(System.in);
+
     // Complete the hackerlandRadioTransmitters function below.
-    static int hackerlandRadioTransmitters(int[] x, int k) {
-        return 0;
+    private static int hackerlandRadioTransmitters(int[] dists, int k) {
+        //Sort the array of house coordinates
+        Arrays.sort(dists);
+        //Position the antennae until the last house is covered
+        //index of the first uncovered house, if no such houses - ind = -1;
+        int currInd = 0;
+        int antCount = 0;
+        while (currInd >= 0) {
 
-
+            currInd = positionAntenna(dists, currInd, k);
+            antCount++;
+        }
+        return antCount;
     }
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static int positionAntenna(int[] dists, int currInd, int k) {
+        int iA = currInd;
+        while (iA < dists.length && dists[iA] - k <= dists[currInd]) {
+            iA++;
+        }
+        int optimalAntenna = iA - 1;
+        int lastCovered = optimalAntenna;
+        while (lastCovered < dists.length && dists[lastCovered] - k <= dists[optimalAntenna]) {
+            lastCovered++;
+        }
+        if (lastCovered == dists.length) {
+            return -1;
+        }
+        return lastCovered;
+    }
 
     public static void main(String[] args) throws IOException {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
